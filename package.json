@@ -1,0 +1,59 @@
+{
+  "name": "tangible-api",
+  "version": "1.0.0",
+  "description": "Tangible API server",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -S --ui bdd --require ./tests/config.js --recursive ./tests --reporter spec",
+    "test-stripe": "env TEST_STRIPE=1 mocha -S --ui bdd --require ./tests/config.js --recursive ./tests --reporter spec",
+    "test-emails": "env TEST_EMAILS=1 mocha -S --ui bdd --require ./tests/config.js --recursive ./tests --reporter spec",
+    "test-full": "env TEST_STRIPE=1 TEST_EMAILS=1 mocha -S --ui bdd --require ./tests/config.js --recursive ./tests --reporter spec",
+    "dev": "NODE_ENV=dev nodemon index.js",
+    "start": "NODE_ENV=production node index.js",
+    "save": "git push bitbucket master",
+    "deploy": "eb deploy",
+    "mongo": "mongo c902.candidate.7.mongolayer.com:10902/tangible -u app -pScout123"
+  },
+  "engines": {
+    "node": "7.6.0"
+  },
+  "author": "Karl Antle",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "bcrypt-nodejs": "0.0.3",
+    "bitly": "^4.1.1",
+    "body-parser": "^1.15.0",
+    "bugsnag": "^1.11.0",
+    "cors": "^2.8.3",
+    "dotenv": "^4.0.0",
+    "express": "^4.13.4",
+    "jsonwebtoken": "^5.7.0",
+    "moment": "^2.13.0",
+    "mongoose": "^4.4.13",
+    "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-jwt": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "phone-formatter": "0.0.2",
+    "react-s3-uploader": "^4.1.1",
+    "sparkpost": "^2.1.2",
+    "stripe": "^4.6.0",
+    "superagent": "^3.5.2",
+    "swagger-jsdoc": "^1.9.7",
+    "swagger-ui-express": "^2.0.7",
+    "twilio": "^2.11.1",
+    "validator": "^7.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.0",
+    "eslint": "^3.9.1",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.6.0",
+    "mocha": "^3.2.0",
+    "should": "^11.1.1",
+    "supertest": "^2.0.0",
+    "nodemon": "^1.11.0"
+  }
+}

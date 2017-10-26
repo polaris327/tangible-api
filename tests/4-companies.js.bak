@@ -1,0 +1,94 @@
+const should = require('should');
+const request = require('supertest');
+const app = require('../index');
+const mongoose = require('mongoose');
+const { URI } = require('./config')
+
+
+describe('************* COMPANIES *************', () => {
+
+  it('should FAIL [422] to create a company without parameters', (done) => {
+    request(app)
+      .post('/companies').set('X-Real-IP', URI)
+      .set('Authorization', ValidUsers[0].cookie)
+      .send({ price: 20 })
+      .expect(422)
+      .end((err, res) => {
+        if (err) done(err);
+        res.body.error.should.be.eql('You must enter a company name');
+        done(err);
+      });
+  });
+
+  var tempCompany;
+  it('should create [201] a company with valid parameters', (done) => {
+    request(app)
+      .post('/companies').set('X-Real-IP', URI)
+      .set('Authorization', ValidUsers[0].cookie)
+      .send(ValidCompanies[0])
+      .expect(201)
+      .end((err, res) => {
+        tempCompany = res.body.company;
+        done(err);
+      });
+  });
+
+  it('should update [200] a company', (done) => {
+    request(app)
+      .put('/companies/' + tempCompany._id).set('X-Real-IP', URI)
+      .set('Authorization', ValidUsers[0].cookie)
+      .send({name: 'A better name'})
+      .expect(200)
+      .end((err, res) => {
+        done(err);
+      });
+  });
+
+  it('should delete [200] a company by id', (done) => {
+    request(app)
+      .delete('/companies/' + tempCompany._id).set('X-Real-IP', URI)
+      .set('Authorization', ValidUsers[0].cookie)
+      .expect(200)
+      .end((err, res) => {
+        done(err);
+      });
+  });
+
+  it('should create [201] companies with valid parameters', (done) => {
+    _.each(ValidCompanies, (VP,i) => {
+      request(app)
+        .post('/companies')
+        .set('X-Real-IP', URI).set('Authorization', ValidUsers[0].cookie)
+        .send(ValidCompanies[i])
+        .expect(201)
+        .end((err, res) => {
+          ValidCompanies[i] = res.body.company;
+          if (i == ValidCompanies.length-1)
+            done(err);
+        });
+    })
+  });
+
+  it('should add a user to a company', (done) => {
+    request(app)
+      .post('/companies/' + ValidCompanies[0]._id + '/addUser').set('X-Real-IP', URI)
+      .set('Authorization', ValidUsers[0].cookie)
+      .send({ userId: ValidUsers[0]._id })
+      .expect(200)
+      .end((err, res) => {
+        done(err);
+      });
+  });
+
+  it('should get my company', (done) => {
+    request(app)
+      .get('/companies/my').set('X-Real-IP', URI)
+      .set('Authorization', ValidUsers[0].cookie)
+      .expect(200)
+      .end((err, res) => {
+        res.body.company._id.should.be.eql(ValidCompanies[0]._id)
+        done(err);
+      });
+  });
+
+});
